@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>康承压水稳定性系数</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <h1>康承压水稳定性系数</h1>
+      <p class="sub">输入参数 → 一键计算 → 输出安全系数 k 与是否满足</p>
+    </header>
+
+    <main class="grid">
+      <section class="card">
+        <div class="card-hd">
+          <h2>输入参数</h2>
+          <div class="hint">单位可按下方括号填写</div>
+        </div>
+
+        <form id="calcForm" class="form">
+          <label class="row">
+            <span class="lbl">载荷 F <em>(kN)</em></span>
+            <input id="F" type="number" step="any" value="50" required />
+          </label>
+
+          <label class="row">
+            <span class="lbl">长度 L <em>(mm)</em></span>
+            <input id="L" type="number" step="any" value="800" required />
+          </label>
+
+          <label class="row">
+            <span class="lbl">宽度 B <em>(mm)</em></span>
+            <input id="B" type="number" step="any" value="200" required />
+          </label>
+
+          <label class="row">
+            <span class="lbl">高度 H <em>(mm)</em></span>
+            <input id="H" type="number" step="any" value="150" required />
+          </label>
+
+          <label class="row">
+            <span class="lbl">材料强度 σ <em>(MPa)</em></span>
+            <input id="sigma" type="number" step="any" value="250" required />
+          </label>
+
+          <label class="row">
+            <span class="lbl">安全允许应力 [σ] <em>(MPa)</em></span>
+            <input id="sigma_allow" type="number" step="any" value="150" required />
+          </label>
+
+          <div class="actions">
+            <button type="submit" class="btn">计算</button>
+            <button type="button" id="resetBtn" class="btn secondary">重置</button>
+          </div>
+
+          <details class="details">
+            <summary>计算说明（可展开）</summary>
+            <div class="details-body">
+              <ul>
+                <li>惯性矩：I = B · H³ / 12（mm⁴）</li>
+                <li>最大弯矩：M = F · L / 2（N·mm），其中 F(kN) → N = F×1000</li>
+                <li>弯曲应力：σb = M · (H/2) / I（MPa）</li>
+                <li>安全系数：k = [σ] / σb</li>
+                <li>判断：k ≥ 1 为“满足”，否则为“不满足”</li>
+              </ul>
+              <div class="note">
+                注：如果你后续把 Excel 的真实公式给我，我可以把这些公式替换成你 Excel 里的版本，并保持界面不变。
+              </div>
+            </div>
+          </details>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="card-hd">
+          <h2>中间结果</h2>
+          <div class="hint">仅展示关键中间量（可用于核对）</div>
+        </div>
+
+        <div class="kv" id="midBox">
+          <div class="kv-row"><span>截面惯性矩 I</span><b id="I">—</b></div>
+          <div class="kv-row"><span>最大弯矩 M</span><b id="M">—</b></div>
+          <div class="kv-row"><span>弯曲应力 σb</span><b id="sigmab">—</b></div>
+          <div class="kv-row"><span>挠度 f</span><b id="defl">—</b></div>
+          <div class="kv-foot">挠度 f 目前使用“简支梁集中载荷”近似（E 默认 2.1×10⁵ MPa）。如与你的 Excel 不一致，可替换。</div>
+        </div>
+      </section>
+
+      <section class="card result">
+        <div class="card-hd">
+          <h2>计算结果</h2>
+          <div class="hint">最终只保留安全系数 k 与是否满足</div>
+        </div>
+
+        <div class="result-main">
+          <div class="kline">
+            <span class="klabel">安全系数</span>
+            <span class="kvalue">k = <b id="k">—</b></span>
+          </div>
+          <div id="okBadge" class="badge">—</div>
+          <div class="small" id="why"> </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <span>本页面为纯前端静态站点，可直接用 GitHub Pages 免费发布。</span>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
